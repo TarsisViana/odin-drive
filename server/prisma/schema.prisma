@@ -25,6 +25,8 @@ model Users {
   email     String    @unique
   firstname String
   lastname  String?
+  password  String
+  salt      String
   role      Role      @default(USER)
   folders   Folders[]
   files     Files[]

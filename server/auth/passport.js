@@ -1,8 +1,8 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import db from "../db/queries.js";
 import { validPassword } from "../lib/passwordUtils.js";
-import pool from "../db/pool.js";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 const customFields = {
   usernameField: "email",
@@ -12,7 +12,7 @@ const customFields = {
 const verifyCallback = async (email, password, done) => {
   try {
     //get user from username
-    const user = await db.getUserByEmail(email);
+    const user = await prisma.users.findUnique({ where: { email: email } });
 
     //if doesnt exist return done(null,false)
     if (!user) return done(null, false, { message: "Incorrect email" });
@@ -38,16 +38,12 @@ const strategy = new LocalStrategy(customFields, verifyCallback);
 passport.use(strategy);
 
 passport.serializeUser((user, done) => {
-  done(null, user.userid);
+  done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const { rows } = await pool.query("SELECT * FROM users WHERE userid = $1", [
-      id,
-    ]);
-    const user = rows[0];
-
+    const user = await prisma.users.findUnique({ where: { id: id } });
     done(null, user);
   } catch (err) {
     done(err);

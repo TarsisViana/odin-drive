@@ -1,7 +1,7 @@
-import session from "./session";
-import user from "./users";
+import login from "./login.js";
+import register from "./register.js";
 
 export default {
-  session,
-  user,
+  login,
+  register,
 };

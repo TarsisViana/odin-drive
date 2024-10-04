@@ -7,18 +7,19 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import passport from "passport";
 import "./auth/passport.js";
+import cors from "cors";
 
-import routes from "./routes";
+import routes from "./routes/index.js";
 
 //---- MIDDLEWARE FUNCTIONS ----
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.CLIENT_URL,
   credentials: true,
 };
-app.use(cors(corsOptions));
+server.use(cors(corsOptions));
 
 //--- PRISMA SESSION SETUP ---
 server.use(
@@ -38,19 +39,20 @@ server.use(
 );
 
 //---- AUTHENTICATION PASSPORTJS ----
-app.use(passport.initialize());
-app.use(passport.session());
+server.use(passport.initialize());
+server.use(passport.session());
 
-app.use((req, res, next) => {
+server.use((req, res, next) => {
   console.log(req.session);
   console.log(req.user);
   next();
 });
 
 //---- ROUTES ----
-app.use("/", indexRouter);
+server.use("/login", routes.login);
+server.use("/register", routes.register);
 
 //---- SERVER ----
-app.listen(process.env.SERVER_PORT, () => {
+server.listen(process.env.SERVER_PORT, () => {
   console.log("server online on: " + process.env.SERVER_PORT);
 });
