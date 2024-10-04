@@ -21,18 +21,30 @@ model Session {
 }
 
 model Users {
-  id        String  @id @default(uuid())
-  email     String  @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   firstname String
   lastname  String?
-  role      Role    @default(USER)
+  role      Role      @default(USER)
+  folders   Folders[]
   files     Files[]
 }
 
-model Files {
-  id      String @id @default(uuid())
-  Users   Users  @relation(fields: [usersId], references: [id])
+model Folders {
+  id      String  @id @default(uuid())
+  name    String
+  Users   Users   @relation(fields: [usersId], references: [id])
   usersId String
+  files   Files[]
+}
+
+model Files {
+  id String @id @default(uuid())
+
+  Users     Users    @relation(fields: [usersId], references: [id])
+  usersId   String
+  Folders   Folders? @relation(fields: [foldersId], references: [id])
+  foldersId String?
 }
 
 enum Role {
