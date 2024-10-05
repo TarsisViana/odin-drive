@@ -5,8 +5,8 @@ import { genPassword } from "../lib/passwordUtils.js";
 const prisma = new PrismaClient();
 
 // validation error msgs
-const alphaErr = "must only contain letters.";
-const lengthErr = "must be between 1 and 10 characters.";
+const alphaErr = "Must only contain letters.";
+const lengthErr = "Must be between 1 and 10 characters.";
 const pwLengthErr = "'Password must be between 4 to 16 characters'";
 const emailErr = "Must be a valid email";
 const usedEmailErr = "This email has an account";
@@ -54,7 +54,9 @@ async function matchPw(confirmPassword, { req }) {
   }
 }
 
-export const newMember = [
+//---middlewares---
+
+export const newUser = [
   validateUser,
   async (req, res) => {
     const { firstname, lastname, email, password } = req.body;
@@ -77,6 +79,7 @@ export const newMember = [
         salt,
       },
     });
+
     res.json({
       user,
       message: "User created successfully",

@@ -49,8 +49,8 @@ server.use((req, res, next) => {
 });
 
 //---- ROUTES ----
-server.use("/login", routes.login);
-server.use("/register", routes.register);
+server.use("/users", routes.users);
+server.use("/session", routes.session);
 
 //---- SERVER ----
 server.listen(process.env.SERVER_PORT, () => {

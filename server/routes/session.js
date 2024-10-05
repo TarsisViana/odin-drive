@@ -4,7 +4,7 @@ const router = Router();
 import passport from "passport";
 
 router.post(
-  "/",
+  "/login",
   passport.authenticate("local", {
     failureMessage: true,
     successMessage: true,
@@ -13,5 +13,14 @@ router.post(
     res.json(req.session.messages);
   }
 );
+
+router.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+  });
+  res.json({ message: "user logged out" });
+});
 
 export default router;
