@@ -1,12 +1,10 @@
-import LoginForm from "./components/LoginForm"
-import RegisterForm from "./components/RegisterForm"
+import { Outlet, useLoaderData } from 'react-router-dom'
 
 function App() {
 
   return (
     <>
-      <RegisterForm />
-      <LoginForm />
+      <Outlet />
     </>
   )
 }
