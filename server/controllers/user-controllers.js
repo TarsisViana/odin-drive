@@ -7,7 +7,8 @@ const prisma = new PrismaClient();
 // validation error msgs
 const alphaErr = "Must only contain letters.";
 const lengthErr = "Must be between 1 and 10 characters.";
-const pwLengthErr = "'Password must be between 4 to 16 characters'";
+const pwLengthErr = "Password must be between 4 to 16 characters";
+const pwMatch = "Passwords must match";
 const emailErr = "Must be a valid email";
 const usedEmailErr = "This email has an account";
 
@@ -34,8 +35,12 @@ const validateUser = [
     .withMessage(emailErr)
     .toLowerCase()
     .custom(checkEmail),
-  body("password").trim().notEmpty().isLength({ min: 4, max: 16 }),
-  body("confirm-pw").trim().notEmpty().custom(matchPw),
+  body("password")
+    .trim()
+    .notEmpty()
+    .isLength({ min: 4, max: 16 })
+    .withMessage(pwLengthErr),
+  body("confirmPw").trim().notEmpty().custom(matchPw).withMessage(""),
 ];
 
 async function checkEmail(email) {

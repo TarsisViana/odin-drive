@@ -1,14 +1,15 @@
-import { Form, redirect } from "react-router-dom";
+import { Form, redirect, useActionData } from "react-router-dom";
 import InputField from "../components/InputField";
-import SubmitButton from "../components/SubmitButton";
+import Button from "../components/Button"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function action({ request }) {
     const formData = await request.formData();
     const user = Object.fromEntries(formData);
 
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_HOST}/register`,
+    try {
+        const res = await fetch(
+      `${import.meta.env.VITE_SERVER_HOST}/users`,
       {
         method: 'post',
         body: JSON.stringify(user),
@@ -16,48 +17,94 @@ export async function action({ request }) {
           "Content-Type": "application/json"
         }
       }
-    )
-    const data = await res.json()
-    console.log(data)
-    return redirect("/")
+        )
+        if (res.status === 400 || res.status === 401) {
+            const payload = await res.json()
+            const errors = objFromArr(payload.errors)
+            return errors;
+        }
+        return redirect('/')
+        
+    } catch (err) {
+        console.log(`Error: ${err}`)
+    }
 }
 
-export default function Register(){
+export default function Register() {
+    const errors = useActionData();
     return (
         <>
             <Form method="post">
                 <InputField
                     name="firstname"
                     type="text"
-                >First Name: <br />
+                >First Name:
+                    {errors && errors.firstname &&
+                        <i style={{ color: "red" }}>
+                            {errors.firstname.msg}
+                        </i>
+                    }
+                    <br />
                 </InputField>
 
                 <InputField
                     name="lastname"
                     type="text"
-                ><br />Last Name: <br />
+                ><br />Last Name:
+                    {errors && errors.lastname &&
+                        <i style={{ color: "red" }}>
+                            {errors.lastname.msg}
+                        </i>
+                    }
+                    <br />
                 </InputField>
 
                 <InputField
                     name="email"
                     type="email"
-                ><br />Email: <br />
+                ><br />Email: {errors && errors.email &&
+                        <i style={{ color: "red" }}>
+                            {errors.email.msg}
+                        </i>
+                    }<br />
                 </InputField>
 
                 <InputField
                     name="password"
                     type="password"
-                ><br />Enter Password: <br />
+                ><br />Enter Password:
+                    {errors && errors.password &&
+                        <i style={{ color: "red" }}>
+                            {errors.password.msg}
+                        </i>
+                    }
+                    <br />
                 </InputField>
 
                 <InputField
-                    name="confirm-pw"
+                    name="confirmPw"
                     type="password"
-                ><br />Confirm Password: <br />
+                ><br />Confirm Password:
+                    {errors && errors.confirmPw &&
+                        <i style={{ color: "red" }}>
+                            {errors.confirmPw.msg}
+                        </i>
+                    }
+                    <br />
                 </InputField>
                 <br/>
-                <SubmitButton type="submit">Submit</SubmitButton>
+                <Button type="submit">Submit</Button>
             </Form>
         </>
     )
+}
+
+function objFromArr(arr) {
+    let obj = {};
+    arr.forEach( item => {
+    obj = {... obj, [item.path]: item}
+    });
+    console.log(obj)
+    return obj;
+    
 }

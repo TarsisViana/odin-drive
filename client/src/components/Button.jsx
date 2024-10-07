@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-export default function SubmitButton({
+export default function Button({
     type = 'button',
     children,
 }) {

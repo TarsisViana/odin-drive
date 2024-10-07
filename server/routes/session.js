@@ -8,10 +8,7 @@ router.post(
   passport.authenticate("local", {
     failureMessage: true,
     successMessage: true,
-  }),
-  (req, res) => {
-    res.json(req.session.messages);
-  }
+  })
 );
 
 router.get("/logout", (req, res, next) => {

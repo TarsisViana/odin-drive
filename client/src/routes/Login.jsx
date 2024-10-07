@@ -1,13 +1,14 @@
 import InputField from "../components/InputField";
-import { Form, redirect } from "react-router-dom";
-import SubmitButton from "../components/SubmitButton";
+import { Form, redirect, useActionData } from "react-router-dom";
+import Button from "../components/Button";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function action({ request }) {
     const formData = await request.formData();
     const user = Object.fromEntries(formData);
-    
-    const res = await fetch(
+
+    try {
+        const res = await fetch(
         `${import.meta.env.VITE_SERVER_HOST}/session/login`,
         {
             method: 'post',
@@ -17,15 +18,23 @@ export async function action({ request }) {
                 "Content-Type": "application/json"
             }
         }
-    )
-    console.log(res)
+        )   
+        if (res.status === 400 || res.status === 401) {
+            return "Invalid email or password."
+        }
+        return redirect('/')
+    } catch (err) {
+        console.log(`Error: ${err}`)
+        return
+    }
 
-    return redirect("/")
 }
 
 export default function Login() {
+    const loginErr = useActionData()
     return (
         <>
+            <p>{loginErr}</p>
             <Form method="post">
                 <InputField
                     type="email"
@@ -38,10 +47,10 @@ export default function Login() {
                 >
                     <br />Password:<br />
                 </InputField>
-                <br/>
-                <SubmitButton type="submit">
+                <br />
+                <Button type="submit">
                     Submit
-                </SubmitButton>
+                </Button>
             </Form>
         </>
     )

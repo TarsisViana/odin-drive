@@ -6,6 +6,7 @@ export default function InputField({ type, name, children }) {
       <input
         type={type}
         name={name}
+        required
       />
     </label>
   );
