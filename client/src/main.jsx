@@ -8,8 +8,8 @@ import {
 import App from './App.jsx'
 import ErrorPage from './routes/Errorpage.jsx';
 import Index from './routes/Index.jsx';
-import Login from './routes/Login.jsx';
-import Register from './routes/Register.jsx';
+import Login, {action as LoginAction} from './routes/Login.jsx';
+import Register, {action as RegisterAction}  from './routes/Register.jsx';
 
 
 const router = createBrowserRouter([
@@ -25,11 +25,13 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+        action: LoginAction,
         errorElement: <div>Oops! There was an error.</div>,
       },
       {
         path: "register",
         element: <Register />,
+        action: RegisterAction,
         errorElement: <div>Oops! There was an error.</div>,
       },
     ]
