@@ -6,8 +6,10 @@ export default function Index() {
       <Link to="/login">Login</Link>
       <br/>
       <Link to="/register">Register</Link>
+      <br/>
+      <Link to="/home">HomePage</Link>
       <button
-      onClick={()=> fetch("http://localhost:3000/session/logout")}>log out</button>
+      onClick={()=> fetch(`${import.meta.env.VITE_SERVER_HOST}/session/logout`)}>log out</button>
     </>
   );
 }

@@ -51,6 +51,7 @@ server.use((req, res, next) => {
 //---- ROUTES ----
 server.use("/users", routes.users);
 server.use("/session", routes.session);
+server.use("/files", routes.files);
 
 //---- SERVER ----
 server.listen(process.env.SERVER_PORT, () => {

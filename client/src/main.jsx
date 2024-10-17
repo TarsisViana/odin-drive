@@ -10,6 +10,7 @@ import ErrorPage from './routes/Errorpage.jsx';
 import Index from './routes/Index.jsx';
 import Login, {action as LoginAction} from './routes/Login.jsx';
 import Register, {action as RegisterAction}  from './routes/Register.jsx';
+import HomePage, {action as HomeAction} from './routes/HomePage.jsx';
 
 
 const router = createBrowserRouter([
@@ -32,6 +33,12 @@ const router = createBrowserRouter([
         path: "register",
         element: <Register />,
         action: RegisterAction,
+        errorElement: <div>Oops! There was an error.</div>,
+      },
+      {
+        path: "home",
+        element: <HomePage />,
+        action: HomeAction,
         errorElement: <div>Oops! There was an error.</div>,
       },
     ]
